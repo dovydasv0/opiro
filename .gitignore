@@ -24,4 +24,4 @@ go.work.sum
 # env file
 .env
 cache
-pd_data
+server/pd_data
