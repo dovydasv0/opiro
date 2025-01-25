@@ -1,13 +1,14 @@
 import PocketBase, { AsyncAuthStore } from "pocketbase";
 import { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { TypedPocketBase } from "@/pocketbase-types";
 
-const PocketBaseContext = createContext<{ pb: PocketBase | undefined }>({ pb: undefined });
+const PocketBaseContext = createContext<{ pb: TypedPocketBase | undefined }>({ pb: undefined });
 
 export const usePocketBase = () => useContext(PocketBaseContext);
 
 export const PocketBaseProvider = ({ children }: { children: [] }) => {
-	const [pb, setPb] = useState<PocketBase>();
+	const [pb, setPb] = useState<TypedPocketBase>();
 
 	useEffect(() => {
 		const initializePocketBase = async () => {
@@ -17,7 +18,7 @@ export const PocketBaseProvider = ({ children }: { children: [] }) => {
 				clear: async () => AsyncStorage.removeItem('pb_auth')
 			})
 
-			const pbInstance = new PocketBase('http://127.0.0.1:8090', store);
+			const pbInstance = new PocketBase('https://opiro.space', store) as TypedPocketBase;
 			setPb(pbInstance);
 		};
 

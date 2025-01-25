@@ -21,7 +21,7 @@ export default function Signup(): ReactElement {
         router.replace("/login")
       } else {
         console.log(resp.error);
-        Alert.alert('Sign Up error', resp.error?.message as string);
+        Alert.alert('Sign Up error', JSON.stringify(email));
       }
     }
   }

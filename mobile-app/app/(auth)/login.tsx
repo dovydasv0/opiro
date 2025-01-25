@@ -19,8 +19,7 @@ export default function Login(): ReactElement {
       if (resp?.user) {
         router.replace("/home")
       } else {
-        console.error(resp.error);
-        Alert.alert('Login Error', resp.error?.message as string)
+        Alert.alert('Login Error', JSON.stringify(resp))
       }
     }
   }
