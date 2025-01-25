@@ -1,6 +1,7 @@
 import { useNavigationContainerRef, useRouter, useSegments } from "expo-router";
 import { createContext, useContext, useEffect, useState } from "react";
 import { usePocketBase } from "./pocketbase";
+import { UsersRecord } from "@/pocketbase-types";
 
 
 const AuthContext = createContext<{
@@ -9,14 +10,14 @@ const AuthContext = createContext<{
 	logIn?: (email: string, password: string) => Promise<{ user?: {} | null, error?: { message?: string | unknown } }>,
 	logOut?: () => Promise<{ user?: {} | null, error?: { message?: string | unknown } }>,
 	createAccount?: (email: string, password: string, passwordConfirm: string) => Promise<{ user?: {} | null, error?: { message?: string | unknown } }>,
-	user?: object | null
+	user?: UsersRecord | null
 }>({});
 
 export function useAuth() {
 	return useContext(AuthContext);
 }
 
-function useProtectedRoute(user: object | null, isInitialized: boolean) {
+function useProtectedRoute(user: UsersRecord | null, isInitialized: boolean) {
 	const router = useRouter();
 	const segments = useSegments();
 
@@ -55,14 +56,14 @@ export const AuthProvider = ({ children }: { children: [] }) => {
 	const { pb } = usePocketBase();
 	const [isInitialized, setIsInitialized] = useState(false);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const [user, setUser] = useState<object | null>(null);
+	const [user, setUser] = useState<UsersRecord | null>(null);
 
 	useEffect(() => {
 		const checkAuthStatus = async () => {
 			if (pb) {
 				const isLoggedIn = pb.authStore.isValid;
 				setIsLoggedIn(isLoggedIn);
-				setUser(isLoggedIn ? pb.authStore.record : null);
+				setUser(isLoggedIn ? pb.authStore.record as any : null);
 				setIsInitialized(true);
 			}
 		}
@@ -77,7 +78,7 @@ export const AuthProvider = ({ children }: { children: [] }) => {
 
 		try {
 			const resp = await pb?.collection('users').authWithPassword(email, password);
-			setUser(pb?.authStore.isValid ? pb.authStore.record : null)
+			setUser(pb?.authStore.isValid ? pb.authStore.record as any : null)
 			setIsLoggedIn(pb?.authStore.isValid ?? false)
 			return { user: resp.record };
 		} catch (e) {
