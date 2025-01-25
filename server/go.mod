@@ -2,7 +2,10 @@ module github.com/dovydasv0/opiro
 
 go 1.23.4
 
-require github.com/pocketbase/pocketbase v0.24.4
+require (
+	github.com/pocketbase/pocketbase v0.24.4
+	golang.org/x/tools v0.29.0
+)
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.7 // indirect
